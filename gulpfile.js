@@ -1,0 +1,99 @@
+var gulp = require('gulp');
+var concat = require('gulp-concat');
+var jshint = require('gulp-jshint');
+var uglify = require('gulp-uglify');
+var minifyhtml = require('gulp-minify-html');
+var cleanCSS = require('gulp-clean-css');
+var sass = require('gulp-sass');
+var livereload = require('gulp-livereload');
+
+var src = './src';
+var dist = './dist';
+var cssLib = './lib/css';
+var jsLib = './lib/js';
+
+var paths = {
+    jslib:[
+        jsLib + '/jquery.min.js',
+        jsLib + '/jquery.autocomplete.min.js',
+        jsLib + '/angular.min.js',
+        jsLib + '/angular-route.min.js'
+    ],
+    js: [
+        src + '/js/define.js',
+        src + '/js/index.js',
+        src + '/js/route.js',
+        src + '/js/**/*.js'
+    ],
+    font:[
+        './lib/bootstrap-sass/fonts/**.*',
+        './lib/font-awesome/fonts/**.*'
+    ],
+    scss: [],
+    css: src + '/css/**/*.css',
+    html: src + '/templates/*.html'
+};
+
+// sass 파일 css 로 컴파일.
+gulp.task('compile-sass', function () {
+    return gulp.src(src + '/scss/main.scss')
+        .pipe(sass({
+            includePaths: [
+                './lib/bootstrap-sass/stylesheets',
+                './lib/font-awesome/scss'
+            ]
+        }))
+        .pipe(cleanCSS({compatibility: 'ie8'}))
+        .pipe(concat('main.css'))
+        .pipe(gulp.dest(dist + '/'));
+});
+
+// 폰트
+gulp.task('fonts', function () {
+    return gulp.src(paths.font)
+        .pipe(gulp.dest(dist + '/fonts'));
+});
+
+// js 파일 관련 Task
+gulp.task('js-lint', function () {
+    return gulp.src(paths.js)
+        .pipe(jshint())
+        .pipe(jshint.reporter('default'));
+});
+
+// js 파일 합치기
+gulp.task('combine-js', ['js-lint'], function () {
+    return gulp.src(paths.jslib.concat(paths.js))
+        .pipe(concat('main.js'))
+        .pipe(gulp.dest(dist + '/'));
+});
+
+// HTML 파일 압축.
+gulp.task('compress-html', function () {
+    return gulp.src(paths.html)
+        .pipe(minifyhtml())
+        .pipe(gulp.dest(dist + '/'));
+});
+
+// 파일 변경 감지 및 브라우저 재시작
+gulp.task('watch', function () {
+    livereload.listen();
+    gulp.watch(paths.js, ['combine-js']);
+    gulp.watch(paths.css, ['clean-css']);
+    gulp.watch(paths.scss, ['compile-sass']);
+    gulp.watch(paths.html, ['compress-html']);
+    gulp.watch(dist + '/**').on('change', livereload.changed);
+});
+
+gulp.task('default', ['combine-js', 'fonts', 'compile-sass', 'compress-html', 'watch']);
+
+/**
+ * TASKS NOT USING
+ */
+// css 파일 합치기
+gulp.task('clean-css', function () {
+    return gulp.src(paths.css)
+        .pipe(cleanCSS({compatibility: 'ie8'}))
+        .pipe(concat('main.css'))
+        .pipe(gulp.dest(dist + '/css'));
+});
