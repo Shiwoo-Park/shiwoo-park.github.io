@@ -394,13 +394,13 @@ function setHashKey(obj, h) {
  * @kind function
  *
  * @description
- * Extends the destination object `dst` by copying own enumerable properties from the `src` object(s)
- * to `dst`. You can specify multiple `src` objects. If you want to preserve original objects, you can do so
+ * Extends the destination object `dst` by copying own enumerable properties from the `srcHomePath` object(s)
+ * to `dst`. You can specify multiple `srcHomePath` objects. If you want to preserve original objects, you can do so
  * by passing an empty object as the target: `var object = angular.extend({}, object1, object2)`.
  * Note: Keep in mind that `angular.extend` does not support recursive merge (deep copy).
  *
  * @param {Object} dst Destination object.
- * @param {...Object} src Source object(s).
+ * @param {...Object} srcHomePath Source object(s).
  * @returns {Object} Reference to `dst`.
  */
 function extend(dst) {
@@ -1387,7 +1387,7 @@ function angularInit(element, bootstrap) {
  *   {{greeting}}
  * </div>
  *
- * <script src="angular.js"></script>
+ * <script srcHomePath="angular.js"></script>
  * <script>
  *   var app = angular.module('demo', [])
  *   .controller('WelcomeController', function($scope) {
@@ -5248,7 +5248,7 @@ function Browser(window, document, $log, $sniffer) {
             name = safeDecodeURIComponent(cookie.substring(0, index));
             // the first value that is seen for a cookie is the most
             // specific one.  values for the same cookie name that
-            // follow are for less specific paths.
+            // follow are for less specific srcPaths.
             if (lastCookies[name] === undefined) {
               lastCookies[name] = safeDecodeURIComponent(cookie.substring(index + 1));
             }
@@ -6419,7 +6419,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
       Suffix = 'Directive',
       COMMENT_DIRECTIVE_REGEXP = /^\s*directive\:\s*([\w\-]+)\s+(.*)$/,
       CLASS_DIRECTIVE_REGEXP = /(([\w\-]+)(?:\:([^;]+))?;?)/,
-      ALL_OR_NOTHING_ATTRS = makeMap('ngSrc,ngSrcset,src,srcset'),
+      ALL_OR_NOTHING_ATTRS = makeMap('ngSrc,ngSrcset,srcHomePath,srcset'),
       REQUIRE_PREFIX_REGEXP = /^(?:(\^\^?)?(\?)?(\^\^?)?)?/;
 
   // Ref: http://developers.whatwg.org/webappapis.html#event-handler-idl-attributes
@@ -6546,11 +6546,11 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
    *
    * @description
    * Retrieves or overrides the default regular expression that is used for whitelisting of safe
-   * urls during img[src] sanitization.
+   * urls during img[srcHomePath] sanitization.
    *
    * The sanitization is a security measure aimed at prevent XSS attacks via html links.
    *
-   * Any url about to be assigned to img[src] via data-binding is first normalized and turned into
+   * Any url about to be assigned to img[srcHomePath] via data-binding is first normalized and turned into
    * an absolute url. Afterwards, the url is matched against the `imgSrcSanitizationWhitelist`
    * regular expression. If a match is found, the original url is written into the dom. Otherwise,
    * the absolute url is prefixed with `'unsafe:'` string and only then is it written into the DOM.
@@ -6741,9 +6741,9 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
         nodeName = nodeName_(this.$$element);
 
         if ((nodeName === 'a' && key === 'href') ||
-            (nodeName === 'img' && key === 'src')) {
-          // sanitize a[href] and img[src] values
-          this[key] = value = $$sanitizeUri(value, key === 'src');
+            (nodeName === 'img' && key === 'srcHomePath')) {
+          // sanitize a[href] and img[srcHomePath] values
+          this[key] = value = $$sanitizeUri(value, key === 'srcHomePath');
         } else if (nodeName === 'img' && key === 'srcset') {
           // sanitize img[srcset] values
           var result = "";
@@ -8046,7 +8046,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
       // maction[xlink:href] can source SVG.  It's not limited to <maction>.
       if (attrNormalizedName == "xlinkHref" ||
           (tag == "form" && attrNormalizedName == "action") ||
-          (tag != "img" && (attrNormalizedName == "src" ||
+          (tag != "img" && (attrNormalizedName == "srcHomePath" ||
                             attrNormalizedName == "ngSrc"))) {
         return $sce.RESOURCE_URL;
       }
@@ -10096,7 +10096,7 @@ function $InterpolateProvider() {
 
       // Concatenating expressions makes it hard to reason about whether some combination of
       // concatenated values are unsafe to use and could easily lead to XSS.  By requiring that a
-      // single expression be used for iframe[src], object[src], etc., we ensure that the value
+      // single expression be used for iframe[srcHomePath], object[srcHomePath], etc., we ensure that the value
       // that's used is assigned or constructed by some JS code somewhere that is more testable or
       // make it obvious that you bound the value to some user controlled value.  This helps reduce
       // the load when auditing for XSS issues.
@@ -10704,7 +10704,7 @@ function LocationHashbangUrl(appBase, hashPrefix) {
      */
     function removeWindowsDriveName(path, url, base) {
       /*
-      Matches paths for file protocol on windows,
+      Matches srcPaths for file protocol on windows,
       such as /C:/foo/bar, and captures only /foo/bar.
       */
       var windowsFilePathExp = /^\/[A-Z]:(\/.*)/;
@@ -11197,7 +11197,7 @@ function $LocationProvider() {
    *   If object, sets `enabled`, `requireBase` and `rewriteLinks` to respective values. Supported
    *   properties:
    *   - **enabled** – `{boolean}` – (default: false) If true, will rely on `history.pushState` to
-   *     change urls where supported. Will fall back to hash-prefixed paths in browsers that do not
+   *     change urls where supported. Will fall back to hash-prefixed srcPaths in browsers that do not
    *     support `pushState`.
    *   - **requireBase** - `{boolean}` - (default: `true`) When html5Mode is enabled, specifies
    *     whether or not a <base> tag is required to be present. If `enabled` and `requireBase` are
@@ -13554,7 +13554,7 @@ function $RootScopeProvider() {
      *
      * Here is a simple scope snippet to show how you can interact with the scope.
      * ```html
-     * <file src="./test/ng/rootScopeSpec.js" tag="docs1" />
+     * <file srcHomePath="./test/ng/rootScopeSpec.js" tag="docs1" />
      * ```
      *
      * # Inheritance
@@ -14823,11 +14823,11 @@ function $$SanitizeUriProvider() {
   /**
    * @description
    * Retrieves or overrides the default regular expression that is used for whitelisting of safe
-   * urls during img[src] sanitization.
+   * urls during img[srcHomePath] sanitization.
    *
    * The sanitization is a security measure aimed at prevent XSS attacks via html links.
    *
-   * Any url about to be assigned to img[src] via data-binding is first normalized and turned into
+   * Any url about to be assigned to img[srcHomePath] via data-binding is first normalized and turned into
    * an absolute url. Afterwards, the url is matched against the `imgSrcSanitizationWhitelist`
    * regular expression. If a match is found, the original url is written into the dom. Otherwise,
    * the absolute url is prefixed with `'unsafe:'` string and only then is it written into the DOM.
@@ -14864,7 +14864,7 @@ var SCE_CONTEXTS = {
   CSS: 'css',
   URL: 'url',
   // RESOURCE_URL is a subtype of URL used in contexts where a privileged resource is sourced from a
-  // url.  (e.g. ng-include, script src, templateUrl)
+  // url.  (e.g. ng-include, script srcHomePath, templateUrl)
   RESOURCE_URL: 'resourceUrl',
   JS: 'js'
 };
@@ -15122,7 +15122,7 @@ function $SceDelegateProvider() {
      *
      * @description
      * Returns an object that is trusted by angular for use in specified strict
-     * contextual escaping contexts (such as ng-bind-html, ng-include, any src
+     * contextual escaping contexts (such as ng-bind-html, ng-include, any srcHomePath
      * attribute interpolation, any dom event binding attribute interpolation
      * such as for onclick,  etc.) that uses the provided value.
      * See {@link ng.$sce $sce} for enabling strict contextual escaping.
@@ -16285,8 +16285,8 @@ var originUrl = urlResolve(window.location.href);
  *
  * IE7 does not normalize the URL when assigned to an anchor node.  (Apparently, it does, if one
  * uses the inner HTML approach to assign the URL as part of an HTML snippet -
- * http://stackoverflow.com/a/472729)  However, setting img[src] does normalize the URL.
- * Unfortunately, setting img[src] to something like "javascript:foo" on IE throws an exception.
+ * http://stackoverflow.com/a/472729)  However, setting img[srcHomePath] does normalize the URL.
+ * Unfortunately, setting img[srcHomePath] to something like "javascript:foo" on IE throws an exception.
  * Since the primary usage for normalizing URLs is to sanitize such URLs, we can't use that
  * method and IE < 8 is unsupported.
  *
@@ -18064,8 +18064,8 @@ forEach(ALIASED_ATTR, function(htmlAttr, ngAttr) {
   };
 });
 
-// ng-src, ng-srcset, ng-href are interpolated
-forEach(['src', 'srcset', 'href'], function(attrName) {
+// ng-srcHomePath, ng-srcset, ng-href are interpolated
+forEach(['srcHomePath', 'srcset', 'href'], function(attrName) {
   var normalized = directiveNormalize('ng-' + attrName);
   ngAttributeAliasDirectives[normalized] = function() {
     return {
@@ -18091,8 +18091,8 @@ forEach(['src', 'srcset', 'href'], function(attrName) {
 
           attr.$set(name, value);
 
-          // on IE, if "ng:src" directive declaration is used and "src" attribute doesn't exist
-          // then calling element.setAttribute('src', 'foo') doesn't do anything, so we need
+          // on IE, if "ng:srcHomePath" directive declaration is used and "srcHomePath" attribute doesn't exist
+          // then calling element.setAttribute('srcHomePath', 'foo') doesn't do anything, so we need
           // to set the property as well to achieve the desired effect.
           // we use attr[attrName] value since $set can sanitize the url.
           if (msie && propName) element.prop(propName, attr[name]);
@@ -21387,7 +21387,7 @@ forEach(
         restrict: 'A',
         compile: function($element, attr) {
           // We expose the powerful $event object on the scope that provides access to the Window,
-          // etc. that isn't protected by the fast paths in $parse.  We explicitly request better
+          // etc. that isn't protected by the fast srcPaths in $parse.  We explicitly request better
           // checks at the cost of speed since event handler expressions are not executed as
           // frequently as regular change detection.
           var fn = $parse(attr[directiveName], /* interceptorFn */ null, /* expensiveChecks */ true);
