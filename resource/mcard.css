@@ -1,29 +1,37 @@
 .calendar {
-font-family:'맑은 고딕';
-font-size:1.3em;
-text-align:center;
+    font-family: '맑은 고딕';
+    font-size: 1.3em;
+    text-align: center;
 }
 
 .month {
-padding-left:10px;
-font-size:1.8em;
-font-weight:bold;
-text-align:left;
+    padding-left: 10px;
+    font-size: 1.8em;
+    font-weight: bold;
+    text-align: left;
 }
 
 .d-day {
-background-color:#fcc;
-color:#f33;
+    background-color: #fcc;
+    color: #f33;
 }
 
 .edit div {
-    padding:5px;
+    padding: 5px;
 }
 
 .margin-bot {
-    margin-bottom:6px;
+    margin-bottom: 6px;
 }
 
 .margin-bot-sm {
-    margin-bottom:15px;
+    margin-bottom: 15px;
+}
+
+.margin-top {
+    margin-top: 6px;
+}
+
+.margin-top-sm {
+    margin-top: 15px;
 }
