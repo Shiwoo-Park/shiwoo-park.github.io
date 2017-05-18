@@ -8,10 +8,12 @@ http.createServer(function(request,response){
 
 	console.log(pathname);
 
-	if(pathname == '' || pathname == '/')
-		pathname = '/mcard/index.html';
+	var basePath = "/mcard-swjs";
 
-	var fullpath = path.join(process.cwd().replace('/mcard',''), pathname);
+	if(pathname == '' || pathname == '/')
+		pathname = basePath+'/index.html';
+
+	var fullpath = path.join(process.cwd().replace(basePath,''), pathname);
 	var ext = pathname.split('.');
 	ext = ext[ext.length-1] || 'plain';
 

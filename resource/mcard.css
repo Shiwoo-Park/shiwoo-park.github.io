@@ -19,3 +19,11 @@ color:#f33;
 .edit div {
     padding:5px;
 }
+
+.margin-bot {
+    margin-bottom:6px;
+}
+
+.margin-bot-sm {
+    margin-bottom:15px;
+}
