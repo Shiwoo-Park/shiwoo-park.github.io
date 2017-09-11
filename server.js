@@ -12,6 +12,8 @@ http.createServer(function (request, response) {
 
     if (pathname == '' || pathname == '/')
         pathname = basePath + '/index.html';
+    else if(!pathname.endsWith('.html'))
+        pathname = pathname + '/index.html';
 
     var fullpath = path.join('/', process.cwd().replace(basePath, ''), pathname);
     var ext = pathname.split('.');
