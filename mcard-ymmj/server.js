@@ -17,6 +17,8 @@ http.createServer(function(request,response){
 	var ext = pathname.split('.');
 	ext = ext[ext.length-1] || 'plain';
 
+	console.log("FULL_PATH:", fullpath);
+
 	try{
 		if(fs.statSync(fullpath).isFile()){
 			fs.readFile(fullpath, 'binary', function(err, file){
@@ -45,4 +47,4 @@ http.createServer(function(request,response){
 
 }).listen(8888);
 
-console.log('Server running');
+console.log('Server running at localhost:8888');

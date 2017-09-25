@@ -8,36 +8,34 @@ http.createServer(function (request, response) {
 
     console.log(pathname);
 
-    var basePath = "/";
+    var basePath = "";
 
-    if (pathname == '' || pathname == '/')
+    if (pathname === '' || pathname === '/')
         pathname = basePath + '/index.html';
-    else if(!pathname.endsWith('.html'))
-        pathname = pathname + '/index.html';
 
-    var fullpath = path.join('/', process.cwd().replace(basePath, ''), pathname);
+    var fullpath = path.join(process.cwd().replace(basePath, ''), pathname);
     var ext = pathname.split('.');
     ext = ext[ext.length - 1] || 'plain';
 
-    try {
-        if (fs.statSync(fullpath).isFile()) {
-            fs.readFile(fullpath, 'binary', function (err, file) {
-                if (err) {
+    try{
+        if(fs.statSync(fullpath).isFile()){
+            fs.readFile(fullpath, 'binary', function(err, file){
+                if(err){
                     console.log(err);
 
-                    response.writeHeader(500, {'Content-Type': 'text/plain'});
+                    response.writeHeader(500, {'Content-Type':'text/plain'});
                     response.write('500 Server Error\n');
                     response.end();
                     return;
                 }
 
-                response.writeHeader(200, {'Content-Type': 'text/' + ext});
+                response.writeHeader(200, {'Content-Type':'text/'+ext});
                 response.write(file, 'binary');
                 response.end();
             });
             return;
         }
-    } catch (e) {
+    }catch(e){
         console.log(e.stack);
     }
 
@@ -47,4 +45,4 @@ http.createServer(function (request, response) {
 
 }).listen(8888);
 
-console.log('Server running');
+console.log('Server running at localhost:8888');
