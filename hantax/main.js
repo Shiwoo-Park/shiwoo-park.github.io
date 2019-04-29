@@ -2,6 +2,8 @@
  * Created by silva on 2019-04-28.
  */
 
+let RANDOM_PHONE_NO_LIST = ['010-6288-1354', '010-2828-1354'];
+
 $(document).ready(function () {
 
     var requestTimeout = 3000; // ms
@@ -88,16 +90,16 @@ $(document).ready(function () {
             if (!isFull) { // draw full table
                 table.attr("isfull", "true");
                 displayCateArr = ["수입금액", "필요경비", "사업소득금액", "근로소득금액", "그외소득금액", "종합소득금액", "일반소득공제", "과세표준", "세율", "산출세액", "기납부세액", "기타세액공제", "근로세액공제", "납부할 세액"];
-            }else{ // draw simple table
+            } else { // draw simple table
                 table.attr("isfull", "false")
             }
             var rowCount = 0;
             displayCateArr.map(function (cate) {
                 var columnHtmlArr = ["<tr>", "<td class='bold'>" + cate + "</td>"];
-                if(redCates[cate])
+                if (redCates[cate])
                     columnHtmlArr = ["<tr class='warning'>", "<td class='bold'>" + cate + "</td>"];
                 percentages.map(function (rate) {
-                    if(redCates[cate])
+                    if (redCates[cate])
                         columnHtmlArr.push("<td id='" + rate + "_" + rowCount + "' class='bold text-danger'></td>");
                     else
                         columnHtmlArr.push("<td id='" + rate + "_" + rowCount + "'></td>");
@@ -182,16 +184,16 @@ $(document).ready(function () {
             if (!isFull) { // draw full table
                 table.attr("isfull", "true");
                 displayCateArr = ["수입금액", "필요경비", "종합소득금액", "일반소득공제", "과세표준", "세율", "산출세액", "기납부세액", "납부할 세액"];
-            }else{ // draw simple table
+            } else { // draw simple table
                 table.attr("isfull", "false")
             }
             var rowCount = 0;
             displayCateArr.map(function (cate) {
                 var columnHtmlArr = ["<tr>", "<td class='bold'>" + cate + "</td>"];
-                if(redCates[cate])
+                if (redCates[cate])
                     columnHtmlArr = ["<tr class='warning'>", "<td class='bold'>" + cate + "</td>"];
                 percentages.map(function (rate) {
-                    if(redCates[cate])
+                    if (redCates[cate])
                         columnHtmlArr.push("<td id='" + rate + "_" + rowCount + "' class='bold text-danger'></td>");
                     else
                         columnHtmlArr.push("<td id='" + rate + "_" + rowCount + "'></td>");
@@ -206,7 +208,7 @@ $(document).ready(function () {
         executeCalculator2: function () {
             var isFull = $('#calculator_table').attr('isfull') == "true";
             var percentages = [65, 70, 75, 80, 85, 90, 95];
-            var data = {earned_income:0, other_income:0};
+            var data = {earned_income: 0, other_income: 0};
 
             var idArr = ['income_business', 'income_free', 'client_family_count', 'tax_credit', 'paid_tax_amount', 'deduction_amount'];
             idArr.map(function (id) {
@@ -556,8 +558,6 @@ $(document).ready(function () {
         console.log($(this))
     });
 
-    $('input[type="text"].currency').autoNumeric({mDec: '0'});
-
     if ($('#clientFamilyEditList').length) {
         Hantax.addClientFamilyRow();
     }
@@ -630,5 +630,9 @@ $(document).ready(function () {
             }
         });
     });
+
+    // random phone no
+    const randomPhoneNo = RANDOM_PHONE_NO_LIST[Math.floor(Math.random() * RANDOM_PHONE_NO_LIST.length)];
+    $('.random_phone_no').text(randomPhoneNo);
 
 });
